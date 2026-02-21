@@ -9,7 +9,7 @@ This guide provides a **well-structured beginner → intermediate flow** for lea
 #  Table of Contents
 
 1. Shebang
-2. creating a Hello World Script
+2. Hello World 
 3. Executing a Script
 4. Variables
 5. Input
