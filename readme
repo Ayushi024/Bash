@@ -1,0 +1,399 @@
+#  Bash Scripting 
+
+Bash is the default command-line shell for most Unix-like systems. It acts both as a command interpreter and a scripting language, enabling users to automate tasks and interact with the operating system efficiently. Bash is an enhanced version of the original Bourne shell.
+This guide provides a **well-structured beginner → intermediate flow** for learning Bash scripting.
+
+---
+
+# 📑 Table of Contents
+
+1. Shebang
+2. creating a Hello World Script
+3. Executing a Script
+4. Variables
+5. Input
+6. Command Line Arguments
+7. If Statements
+8. Loops
+9. Functions
+10. Pipes and Redirection
+11. Quotes and Concatenation
+12. Environment vs Shell Variables
+13. String Operations
+14. Unset Variables
+15. Best Practices
+
+---
+
+##  1. The Shebang
+
+The **shebang (`#!`)** defines which interpreter executes the script.
+
+### Example
+
+```bash
+#!/usr/bin/env bash
+```
+
+✅ Ensures the script runs with Bash from the user's environment.
+
+---
+
+##  2. Hello World 
+
+```bash
+#!/usr/bin/env bash
+echo "Hello World"
+```
+
+---
+
+##  3. Executing a Script
+
+Make the script executable and run it:
+
+```bash
+chmod u+x filename.sh
+./filename.sh
+```
+
+---
+
+##  4. Variables
+In Bash, variables store data values that can be reused throughout the script. A variable is assigned using = and accessed using $.
+### Assignment and Access
+
+```bash
+var="Test"
+echo "$var"
+echo "${var}"
+```
+Bash also allows you to explicitly declare variable types such as integers, arrays, and read-only variables using the declare keyword.
+### Variable Types
+
+```bash
+declare -i var        # Integer
+declare -a arr        # Array
+declare -r var2=5     # Read-only
+```
+
+### Command Substitution
+Command substitution ($(...)) allows storing the output of a command inside a variable.
+```bash
+user=$(whoami)
+```
+
+### Exporting Variables
+
+```bash
+export var
+```
+
+### Local Variables in Functions
+Variables inside functions can be marked local to limit their scope.
+```bash
+myFunc() {
+  local localVar="value"
+}
+```
+
+---
+
+##  5. Input
+User input in Bash scripts is typically captured using the read command, which can store input into variables or arrays.
+```bash
+read -p "Enter name: " name
+read -a arr
+```
+
+---
+
+##  6. Command Line Arguments
+Bash provides special built-in variables that allow scripts to access arguments passed from the command line. These include positional parameters ($1, $2, etc.), the argument count ($#), and process-related identifiers like $$.
+| Variable | Description                       |
+| -------- | --------------------------------- |
+| `$0`     | Script name                       |
+| `$1..$n` | Positional arguments              |
+| `$#`     | Number of arguments               |
+| `$*`     | All args as string                |
+| `$@`     | All args as array                 |
+| `$?`     | Last command exit status          |
+| `$$`     | Current script PID                |
+| `$!`     | Last background PID               |
+| `$_`     | Last argument of previous command |
+
+---
+
+##  7. If Statements
+
+### Basic Syntax
+
+```bash
+if [ condition ]; then
+  # commands
+fi
+```
+
+### Integer Comparison
+
+```bash
+if [ "$i" -eq 10 ]; then
+  echo "True"
+fi
+```
+
+### String Comparison
+
+```bash
+if [ "$name" == "10" ]; then
+  echo "True"
+fi
+```
+
+---
+
+### Integer Operators
+
+| Operator | Meaning          |
+| -------- | ---------------- |
+| `-eq`    | equal            |
+| `-ne`    | not equal        |
+| `-gt`    | greater than     |
+| `-ge`    | greater or equal |
+| `-lt`    | less than        |
+| `-le`    | less or equal    |
+
+---
+
+### String Operators
+
+| Operator | Meaning   |
+| -------- | --------- |
+| `==`     | equal     |
+| `!=`     | not equal |
+| `>`      | greater   |
+| `<`      | less      |
+| `-n`     | not null  |
+| `-z`     | null      |
+
+---
+
+##  8. Loops
+Loops in Bash allow repeated execution of commands.
+
+for loop → iterates over a list or range
+while loop → runs while a condition remains true
+until loop → runs until a condition becomes true
+
+Loop control keywords like break and continue help manage loop flow
+### For Loop
+
+```bash
+for i in 1 2 3; do
+  echo "$i"
+done
+```
+
+### While Loop
+
+```bash
+i=1
+while [ "$i" -le 3 ]; do
+  echo "$i"
+  ((i++))
+done
+```
+
+### Until Loop
+
+```bash
+i=1
+until [ "$i" -gt 3 ]; do
+  echo "$i"
+  ((i++))
+done
+```
+
+---
+
+##  Loop Control
+
+### Break
+
+```bash
+for i in 1 2 3 4 5; do
+  if [ "$i" -eq 3 ]; then
+    break
+  fi
+  echo "$i"
+done
+```
+
+### Continue
+
+```bash
+for i in 1 2 3 4 5; do
+  if [ "$i" -eq 3 ]; then
+    continue
+  fi
+  echo "$i"
+done
+```
+
+---
+
+##  C-Style For Loop
+
+```bash
+for (( i=1; i<=3; i++ )); do
+  echo "$i"
+done
+```
+
+---
+
+##  9. Functions
+
+```bash
+hello_world() {
+  echo "Hello World!"
+}
+
+hello_world
+```
+
+### Function with Return
+
+```bash
+#!/usr/bin/env bash
+
+sum_two() {
+  return $(($1 + $2))
+}
+
+sum_two 5 3
+echo $?
+```
+
+⚠️ Bash functions return integers only (0–255).
+
+---
+
+##  10. Pipes
+A pipe (|) connects multiple commands by sending the output of one command as the input to another. This enables powerful command chaining.
+```bash
+ps -x | grep chromium
+```
+
+---
+
+##  11. Redirections
+Redirection operators control where command output and errors are sent. For example, output can be written to files, appended, or suppressed.
+```bash
+some_command > out.log
+some_command 2> err.log
+some_command 2>&1
+some_command 1>/dev/null 2>&1
+```
+
+---
+
+##  12. Quotes
+Double quotes allow variable and command expansion.
+Single quotes treat the enclosed text literally with no expansion.
+* **Double quotes** → allow variable expansion
+* **Single quotes** → treat string literally
+
+---
+
+##  Variable Concatenation
+
+```bash
+firstname="John"
+lastname="Doe"
+fullname="$firstname $lastname"
+```
+
+---
+
+##  13. Environment vs Shell Variables
+
+* `env` / `printenv` → show exported variables
+* `set` → shows all shell variables including local and non-exported ones.
+
+---
+
+##  14. String Operations
+
+### Substring
+
+```bash
+str="Bash Scripting"
+
+substring1=${str:0:4}
+substring2=${str:5}
+substring3=${str:5:6}
+```
+
+### String Replacement
+
+```bash
+replaced1=${str/apple/orange}   # first occurrence
+replaced2=${str//apple/orange}  # all occurrences
+```
+
+### Case Conversion (Bash 4+)
+
+```bash
+uppercase=${str^^}
+lowercase=${str,,}
+```
+
+### String Comparison
+Strings in Bash can be compared using operators like =, ==, and != within conditional expressions to check equality or inequality.
+```bash
+if [ "$str1" = "$str2" ]; then
+  echo "Equal"
+fi
+
+if [ "$str1" == "hello" ]; then
+  echo "Match"
+fi
+
+if [ "$str1" != "$str2" ]; then
+  echo "Not equal"
+fi
+```
+
+---
+
+##  15. Unset Variables
+The unset command removes a variable from the shell environment. After unsetting, the variable is considered undefined.
+### Correct Usage
+
+```bash
+temp_var="value"
+echo "$temp_var"
+
+unset temp_var
+
+if [[ -v temp_var ]]; then
+  echo "var exists"
+else
+  echo "var doesn't exist"
+fi
+```
+
+---
+
+##  Best Practices
+
+✅ Always quote variables
+✅ Use `#!/usr/bin/env bash`
+✅ Prefer `[[ ]]` over `[ ]` in Bash
+✅ Use `local` inside functions
+✅ Handle errors with exit codes
+
+---
+
+ **Happy Scripting!**
