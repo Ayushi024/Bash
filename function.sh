@@ -1,13 +1,14 @@
-
 #!/bin/bash
+
 loyalornot() {
-  read name
-  if [[ "$name" == "loyal" ]]
-  then
-     echo "$name is loyal"
+  read -p "Enter a name or status: " name
+
+  if [[ "$name" == "loyal" ]]; then
+    echo "$name is loyal"
   else
-     echo "$name is not loyal"
+    echo "$name is not loyal"
   fi
 }
 
+# Call the function
 loyalornot
