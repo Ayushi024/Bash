@@ -290,13 +290,26 @@ ps -x | grep chromium
 
 ##  11. Redirections
 Redirection operators control where command output and errors are sent. For example, output can be written to files, appended, or suppressed.
-```bash
-some_command > out.log
-some_command 2> err.log
-some_command 2>&1
-some_command 1>/dev/null 2>&1
-```
 
+| Descriptor | Meaning                  |
+| ---------- | ------------------------ |
+| `0`        | Standard Input (stdin)   |
+| `1`        | Standard Output (stdout) |
+| `2`        | Standard Error (stderr)  |
+
+Basic Redirections
+```bash
+some_command > out.log      # stdout (1)
+some_command 2> err.log     # stderr (2)
+some_command 2>&1          # stderr → stdout
+
+```
+/dev/null discards all data written to it.
+```bash
+some_command > /dev/null          # Discard stdout
+some_command 2> /dev/null         # Discard stderr
+some_command 1>/dev/null 2>&1     # Discard both
+```
 ---
 
 ##  12. Quotes
