@@ -19,11 +19,12 @@
 # 6. Set API_VERSION programmatically
 #
 # ============================================================
+#!/bin/bash
 
 API_VERSION="v1.0"
 
 if [[ -f ".env" ]]; then
-  read -p ".env exists. Override? (y/n): " choice
+  read -p ".env already exists. Override? (y/n): " choice
   if [[ "$choice" != "y" ]]; then
     echo "Aborting."
     exit 1
@@ -34,7 +35,7 @@ read -p "Enter your Email: " EMAIL
 read -s -p "Enter Password: " PASSWORD
 echo
 
-USERNAME="${EMAIL%@*}"
+USERNAME=$(echo "$EMAIL" | cut -d'@' -f1)
 
 cp .env.example .env
 
