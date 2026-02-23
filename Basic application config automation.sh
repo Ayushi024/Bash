@@ -45,4 +45,4 @@ sed -i \
   -e "s/{{API_VERSION}}/$API_VERSION/g" \
   .env
 
-echo ".env created successfully ✅"
+echo ".env created successfully"
